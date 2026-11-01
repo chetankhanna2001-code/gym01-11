@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 6 8 11;
+  --fg: 241 245 249;
+  --muted: 148 163 184;
+  --accent: 198 255 61;
+  --accent2: 34 225 255;
+  --glass-bg: rgba(255, 255, 255, 0.045);
+  --glass-border: rgba(255, 255, 255, 0.09);
+  --glass-shadow: 0 18px 50px -20px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --blob-a: rgba(198, 255, 61, 0.16);
+  --blob-b: rgba(34, 225, 255, 0.13);
+  color-scheme: dark;
+}
+
+html.light {
+  --bg: 242 245 238;
+  --fg: 12 17 23;
+  --muted: 82 94 110;
+  --accent: 77 124 15;
+  --accent2: 14 116 144;
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(15, 23, 42, 0.08);
+  --glass-shadow: 0 18px 40px -22px rgba(15, 23, 42, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  --blob-a: rgba(163, 230, 53, 0.28);
+  --blob-b: rgba(34, 211, 238, 0.22);
+  color-scheme: light;
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-bg font-sans text-fg antialiased;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight;
+  }
+  ::selection {
+    background: rgb(var(--accent) / 0.35);
+  }
+}
+
+@layer components {
+  .glass {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border-radius: 1.5rem;
+  }
+  .text-gradient {
+    background-image: linear-gradient(100deg, rgb(var(--accent)), rgb(var(--accent2)));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-gradient-to-r from-volt to-aqua text-black shadow-glow hover:brightness-110 hover:shadow-[0_0_60px_-8px_rgb(var(--accent)/0.7)];
+  }
+  .btn-ghost {
+    @apply btn border border-fg/10 bg-fg/5 text-fg hover:border-fg/20 hover:bg-fg/10;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-fg/10 bg-fg/5 px-3 py-1 text-xs font-medium text-fg/80;
+  }
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.18em] text-accent;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+}
+
+/* Ambient glow background */
+.backdrop-glow {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(40rem 30rem at 85% -5%, var(--blob-b), transparent 60%),
+    radial-gradient(36rem 28rem at -5% 15%, var(--blob-a), transparent 60%),
+    radial-gradient(30rem 24rem at 60% 110%, var(--blob-a), transparent 60%);
+}
+.backdrop-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgb(var(--fg) / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--fg) / 0.035) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at 50% 0%, black 20%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 0%, black 20%, transparent 70%);
+}
+
+.skeleton {
+  background: linear-gradient(100deg, rgb(var(--fg) / 0.05) 30%, rgb(var(--fg) / 0.12) 50%, rgb(var(--fg) / 0.05) 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+@keyframes shimmer {
+  from { background-position: 150% 0; }
+  to { background-position: -50% 0; }
+}
+
+.recharts-wrapper,
+.recharts-surface {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
